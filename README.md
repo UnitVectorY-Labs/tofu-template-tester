@@ -1,3 +1,5 @@
+[![GitHub release](https://img.shields.io/github/release/UnitVectorY-Labs/tofu-template-tester.svg)](https://github.com/UnitVectorY-Labs/tofu-template-tester/releases/latest) [![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT) [![Active](https://img.shields.io/badge/Status-Active-green)](https://guide.unitvectorylabs.com/bestpractices/status/#active) [![Go Report Card](https://goreportcard.com/badge/github.com/UnitVectorY-Labs/tofu-template-tester)](https://goreportcard.com/report/github.com/UnitVectorY-Labs/tofu-template-tester)
+
 # tofu-template-tester
 
 A lightweight Go CLI that renders Terraform-compatible templates by replacing ${NAME} placeholders with user-supplied values.
