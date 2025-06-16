@@ -23,8 +23,18 @@ var (
 // regex to find Terraform template placeholders like ${NAME}
 var varRe = regexp.MustCompile(`\${\s*([A-Za-z0-9_]+)\s*}`)
 
+var Version = "dev" // This will be set by the build systems to the release version
+
 func main() {
+
+	showVersion := flag.Bool("version", false, "Print version")
+
 	flag.Parse()
+
+	if *showVersion {
+		fmt.Println("Version:", Version)
+		return
+	}
 
 	input, err := readInput(*flagIn)
 	if err != nil {
