@@ -4,6 +4,16 @@
 
 A lightweight Go CLI that renders Terraform-compatible templates by replacing ${NAME} placeholders with user-supplied values.
 
+## Releases
+
+All official versions of **tofu-template-tester** are published on [GitHub Releases](https://github.com/UnitVectorY-Labs/tofu-template-tester/releases). Since this application is written in Go, each release provides pre-compiled executables for macOS, Linux, and Windows—ready to download and run.
+
+Alternatively, if you have Go installed, you can install **tofu-template-tester** directly from source using the following command:
+
+```bash
+go install github.com/UnitVectorY-Labs/tofu-template-tester@latest
+```
+
 ## Command-Line Parameters
 
 *   `-list-params`: List all template variables found in the input template.
