@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"runtime/debug"
 	"sort"
 	"strings"
 )
@@ -26,6 +27,14 @@ var varRe = regexp.MustCompile(`\${\s*([A-Za-z0-9_]+)\s*}`)
 var Version = "dev" // This will be set by the build systems to the release version
 
 func main() {
+	// Set the build version from the build info if not set by the build system
+	if Version == "dev" || Version == "" {
+		if bi, ok := debug.ReadBuildInfo(); ok {
+			if bi.Main.Version != "" && bi.Main.Version != "(devel)" {
+				Version = bi.Main.Version
+			}
+		}
+	}
 
 	showVersion := flag.Bool("version", false, "Print version")
 
