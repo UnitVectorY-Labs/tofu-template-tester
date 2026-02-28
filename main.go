@@ -157,15 +157,15 @@ func promptForVars(vars []string, existing map[string]string) map[string]string 
 func processTemplate(tmpl string, props map[string]string) (string, error) {
 	var missingErr error
 	result := varRe.ReplaceAllStringFunc(tmpl, func(match string) string {
-		if missingErr != nil {
-			return match
-		}
 		// Handle escape sequences
 		if match == "$${" {
 			return "${"
 		}
 		if match == "%%{" {
 			return "%{"
+		}
+		if missingErr != nil {
+			return match
 		}
 		key := varRe.FindStringSubmatch(match)[1]
 		val, ok := props[key]
