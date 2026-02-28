@@ -21,8 +21,8 @@ var (
 	flagOut         = flag.String("out", "", "Path to write output (default: STDOUT)")
 )
 
-// regex to find Terraform template placeholders like ${NAME}
-var varRe = regexp.MustCompile(`\${\s*([A-Za-z0-9_]+)\s*}`)
+// regex to find Terraform template placeholders like ${NAME} and escape sequences like $${
+var varRe = regexp.MustCompile(`\$\$\{|%%\{|\$\{\s*([A-Za-z0-9_]+)\s*\}`)
 
 var Version = "dev" // This will be set by the build systems to the release version
 
@@ -105,7 +105,9 @@ func listParams(template string) []string {
 	matches := varRe.FindAllStringSubmatch(template, -1)
 	set := make(map[string]struct{})
 	for _, m := range matches {
-		set[m[1]] = struct{}{}
+		if m[1] != "" { // skip escape sequences ($${, %%{)
+			set[m[1]] = struct{}{}
+		}
 	}
 	vars := make([]string, 0, len(set))
 	for k := range set {
@@ -153,14 +155,30 @@ func promptForVars(vars []string, existing map[string]string) map[string]string 
 }
 
 func processTemplate(tmpl string, props map[string]string) (string, error) {
-	return varRe.ReplaceAllStringFunc(tmpl, func(match string) string {
+	var missingErr error
+	result := varRe.ReplaceAllStringFunc(tmpl, func(match string) string {
+		if missingErr != nil {
+			return match
+		}
+		// Handle escape sequences
+		if match == "$${" {
+			return "${"
+		}
+		if match == "%%{" {
+			return "%{"
+		}
 		key := varRe.FindStringSubmatch(match)[1]
 		val, ok := props[key]
 		if !ok {
-			exitErr(fmt.Errorf("missing property: %s", key))
+			missingErr = fmt.Errorf("missing property: %s", key)
+			return match
 		}
 		return val
-	}), nil
+	})
+	if missingErr != nil {
+		return "", missingErr
+	}
+	return result, nil
 }
 
 func writeOutput(output, path string) error {
