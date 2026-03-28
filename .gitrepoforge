@@ -1,0 +1,10 @@
+name: tofu-template-tester
+default_branch: main
+config:
+  description: "A lightweight Go CLI that renders Terraform-compatible templates by replacing ${NAME} placeholders with user-supplied values."
+  license: MIT
+  language: go
+  release: release-go
+  justfile: true
+  codecov: false
+
