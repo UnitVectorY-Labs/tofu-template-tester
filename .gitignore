@@ -3,6 +3,7 @@
 
 # Name of compile binary for Go executable
 tofu-template-tester
+coverage.txt
 
 # https://www.toptal.com/developers/gitignore/api/macos
 ### macOS ###
