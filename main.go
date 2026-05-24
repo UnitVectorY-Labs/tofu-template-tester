@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"runtime"
 	"runtime/debug"
 	"sort"
 	"strings"
@@ -23,8 +24,10 @@ var (
 
 // regex to find Terraform template placeholders like ${NAME}
 var varRe = regexp.MustCompile(`\${\s*([A-Za-z0-9_]+)\s*}`)
+var semverRe = regexp.MustCompile(`^\d+\.\d+\.\d+`)
 
 var Version = "dev" // This will be set by the build systems to the release version
+const projectName = "tofu-template-tester"
 
 func main() {
 	// Set the build version from the build info if not set by the build system
@@ -41,7 +44,7 @@ func main() {
 	flag.Parse()
 
 	if *showVersion {
-		fmt.Println("Version:", Version)
+		fmt.Printf("%s version %s\n", projectName, buildVersionOutput(Version))
 		return
 	}
 
@@ -182,4 +185,12 @@ func writeOutput(output, path string) error {
 func exitErr(err error) {
 	fmt.Fprintln(os.Stderr, "Error:", err)
 	os.Exit(1)
+}
+
+func buildVersionOutput(version string) string {
+	normalized := version
+	if semverRe.MatchString(normalized) && !strings.HasPrefix(normalized, "v") {
+		normalized = "v" + normalized
+	}
+	return fmt.Sprintf("%s (%s, %s/%s)", normalized, runtime.Version(), runtime.GOOS, runtime.GOARCH)
 }
