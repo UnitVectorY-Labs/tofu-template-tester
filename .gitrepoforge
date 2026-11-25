@@ -9,6 +9,3 @@ config:
   justfile: true
   status: active
   release_github: true
-  codecov:
-    enabled: true
-    token: s6U8PSJph9
